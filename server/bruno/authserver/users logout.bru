@@ -1,0 +1,15 @@
+meta {
+  name: users logout
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUri}}/users/logout
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWRiMTViNTUxYzM3MTQ2YzRhYmQzYzkiLCJpYXQiOjE3MDg5NDAzMDAsImV4cCI6MTcwODk0MTIwMH0.51kXEyQtsxL064Si_a-wgMQKxpANJqkv-Z6j88utjGg
+}
