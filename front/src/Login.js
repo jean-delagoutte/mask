@@ -1,6 +1,7 @@
 import React, {useState, useContext} from "react";
 import { Button, Callout, FormGroup, InputGroup } from "@blueprintjs/core"
 import { UserContext } from "./context/UserContext";
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ const Login = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);    
     const [error, setError] = useState("");
     const [userContext, setUserContext] = useContext(UserContext);
+    const {t} = useTranslation();
 
     const formSubmitHandler  = async (e) => {
         e.preventDefault();
@@ -55,18 +57,18 @@ const Login = () => {
         <>
         {error && <Callout intent="danger">{error}</Callout>}
         <form className="auth-form" onSubmit={formSubmitHandler}>
-            <FormGroup label="Email" labelFor="email">
-                <InputGroup id="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <FormGroup label={t('email')} labelFor="email">
+                <InputGroup id="email" type="email" placeholder={t('email')} value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormGroup>
-            <FormGroup label="Password" labelFor="password">
-                <InputGroup id="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <FormGroup label={t('password')} labelFor="password">
+                <InputGroup id="password" type="password" placeholder={t('password')} value={password} onChange={(e) => setPassword(e.target.value)} />
             </FormGroup>
             <Button 
                 intent="primary"
                 disabled={isSubmitting} 
                 fill 
                 type="submit" 
-                text={`${isSubmitting ? "Signing In" : "Sign In"}`} />
+                text={isSubmitting ? t('signingIn') : t('signIn')} />
         </form>
         </>
     )

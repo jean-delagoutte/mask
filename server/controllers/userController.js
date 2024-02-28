@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const {getToken, COOKIE_OPTIONS, getRefreshToken} = require('../authentificate');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const signup = async (req, res) => {
     if (!req.body.firstName){
@@ -20,7 +21,7 @@ const signup = async (req, res) => {
                   const token = getToken({_id: user._id});
                   const refreshToken = getRefreshToken({_id: user._id});
                   user.refreshToken.push({refreshToken});
-                  
+                  user.emailVerificationToken = crypto.randomBytes(20).toString('hex');
                   try
                   {
                       const userSend = user.save();

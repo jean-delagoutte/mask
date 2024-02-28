@@ -33,4 +33,6 @@ router.get("/me", verifyUser, (req, res, next) => {
 // @access  Private
 router.get('/logout', verifyUser, userController.logout);
 
+
+
 module.exports = router;

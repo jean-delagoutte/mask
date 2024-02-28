@@ -68,6 +68,7 @@ const Welcome = () => {
     ) : !userContext.details ? (
         <Loader />
     ) : (
+        <>
         <Card elevation="1">
             <div className="user-details">  
                 <div>
@@ -84,6 +85,7 @@ const Welcome = () => {
                 </div>
             </div>
         </Card>
+        </>
     )
 };
 
