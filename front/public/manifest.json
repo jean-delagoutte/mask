@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Mern Auth starter kit",
+  "name": "Create application with auth",
   "icons": [
     {
       "src": "favicon.ico",

@@ -13,7 +13,7 @@ passport.use(
     new JwtStrategy(jwtOptions,  async (jwtPayload, done) => {
         try
         {
-            const user =  await User.findOne({ _id: jwtPayload._id });
+            const user =  await User.findOne({ _id: jwtPayload._id }).select('_id firstName lastName username points twoFactorEnabled');
             if (user) {
                 return done(null, user);
             } else {

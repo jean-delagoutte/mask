@@ -1,5 +1,5 @@
 import { Alignment, Navbar, Menu, MenuItem, Popover, Button, Switch } from '@blueprintjs/core';
-import { useContext, useState } from 'react';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import { UserContext } from "../context/UserContext";
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
@@ -9,10 +9,10 @@ import { ThemeContext } from '../context/ThemeContext';
 
 
 
-const Header = () => {
-  const [userContext] = useContext(UserContext);
+const Header = ({setActiveTab}) => {
+  const [userContext, setUserContext] = useContext(UserContext);
   const [langage, setLangage] = useState('fr');
-  const {t} = useTranslation();
+  const {t} = useTranslation('header');
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   const handleLanguageChange = (newlangage) => {
@@ -20,9 +20,7 @@ const Header = () => {
     console.log('new langage : '+newlangage);
     i18n.changeLanguage(newlangage);
   };
-
-
-
+  
   const getLangageCountryCode = (lang) => {
     switch(lang){
       case 'fr':
@@ -34,7 +32,61 @@ const Header = () => {
       default:
         return 'fr';
     }
-  }
+  };
+
+  const logoutHandler = () => {   
+    fetch(`${process.env.REACT_APP_API_ENDPOINT}/users/logout`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userContext.token}`,
+        },
+    }).then(async (res) => {
+        setUserContext(oldValues => {
+            return { ...oldValues, token: null, details: null }
+        })
+        window.localStorage.setItem("logout", Date.now());
+    }
+    );
+  };
+
+  const fetchUserDetails = useCallback(() => {
+    fetch(`${process.env.REACT_APP_API_ENDPOINT}/users/me`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userContext.token}`
+        }
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+            setUserContext(oldValues => {
+                return { ...oldValues, details: data }
+            })
+        }
+        else{
+            if (res.status === 401) {
+                window.location.reload();
+            }else{
+                setUserContext(oldValues => {
+                    return { ...oldValues, details: null }
+                })
+            }
+        }
+    });
+  }, [setUserContext, userContext.token]);
+
+  useEffect(() => {
+    if (userContext.token != null){
+      if (!userContext.details){
+        fetchUserDetails();
+      }
+    }
+
+  }, [userContext.details, fetchUserDetails]);
+  
 
   return (
     <header>
@@ -56,15 +108,15 @@ const Header = () => {
                 <Popover content={
                     <Menu>
                         <MenuItem icon="user"  text={t('profile')} />
-                        <MenuItem icon="log-out"  text={t('logout')} />
+                        <MenuItem icon="log-out"  text={t('logout')} onClick={logoutHandler} />
                     </Menu>} placement='bottom'>
                     <Button icon='user' text={userContext.details?.username} />
                 </Popover>
                 </>
               ) : (
                 <>
-                    <Button className="bp5-minimal" icon="log-in"  text={t('signIn')}/>
-                    <Button className="bp5-minimal"icon="new-person"  text={t('signUp')} />
+                    <Button className="bp5-minimal" icon="log-in"  text={t('signIn')}  onClick={() => setActiveTab('login')}/>
+                    <Button className="bp5-minimal"icon="new-person"  text={t('signUp')} onClick={() => setActiveTab('register')}/>
                 </>
               )}
               <Popover content={

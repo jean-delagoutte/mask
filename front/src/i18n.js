@@ -13,13 +13,15 @@ i18n
       caches: ['cookie'],
     },
     backend: {
-      loadPath: '/locales/{{lng}}/translation.json',
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
-    fallbackLng: 'en',
+    fallbackLng: 'fr',
     debug: true,
     interpolation: {
       escapeValue: false,
     },
+    nsSeparator: false,
+    defaultNS: 'translation',
 });
 
 export default i18n;

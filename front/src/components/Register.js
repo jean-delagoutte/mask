@@ -1,16 +1,18 @@
 import React,{useState, useContext} from "react";
 import { Button, Callout, FormGroup, InputGroup } from "@blueprintjs/core";
-import { UserContext } from "./context/UserContext";
+import { UserContext } from "../context/UserContext";
+import { useTranslation } from 'react-i18next';
 
 
 const Register = () => {
-    const [userContext, setUserContext] = useContext(UserContext);
+    const [, setUserContext] = useContext(UserContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const {t} = useTranslation('loginregister');
 
     const formSubmitHandler = async (e) => {
         e.preventDefault();
@@ -64,24 +66,24 @@ const Register = () => {
         <>
         {error && <Callout intent="danger">{error}</Callout>}
         <form className="auth-form" onSubmit={formSubmitHandler}>
-            <FormGroup label="First Name" labelFor="firstName">
-                <InputGroup id="firstName" type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            <FormGroup label={t('firstName')} labelFor="firstName">
+                <InputGroup id="firstName" type="text" placeholder={t('firstName')} value={firstName} onChange={(e) => setFirstName(e.target.value)} />
             </FormGroup>
-            <FormGroup label="Last Name" labelFor="lastName">
-                <InputGroup id="lastName" type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <FormGroup label={t('lastName')} labelFor="lastName">
+                <InputGroup id="lastName" type="text" placeholder={t('lastName')} value={lastName} onChange={(e) => setLastName(e.target.value)} />
             </FormGroup>
-            <FormGroup label="Email" labelFor="email">
-                <InputGroup id="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <FormGroup label={t('email')} labelFor="email">
+                <InputGroup id="email" type="email" placeholder={t('email')} value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormGroup>
-            <FormGroup label="Password" labelFor="password">
-                <InputGroup id="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <FormGroup label={t('password')} labelFor="password">
+                <InputGroup id="password" type="password" placeholder={t('password')} value={password} onChange={(e) => setPassword(e.target.value)} />
             </FormGroup>
             <Button 
               intent="primary"
               disabled={isSubmitting} 
               fill 
               type="submit" 
-              text={`${isSubmitting ? "Registering" : "Register"}`} />
+              text={`${isSubmitting ? t('registring') : t('register')}`} />
         </form>
         </>
     )

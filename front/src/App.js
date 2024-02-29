@@ -1,21 +1,17 @@
 import './App.css';
 import React, {useState, useContext, useCallback, useEffect} from 'react';
-import { Card, Tab, Tabs } from '@blueprintjs/core';
-import Login from './Login';
-import Register from './Register';
 import { UserContext } from './context/UserContext';
 import Welcome from './Welcome';
 import Loader from './Loader';
 import Header from './components/Header';
-import { useTranslation } from 'react-i18next';
 import { ThemeContext, lightTheme, darkTheme  } from './context/ThemeContext';
-import  FormContainer  from './components/FormContainer';
+import LoginRegister from './components/LoginRegister';
+
 
  function App() {
-  const [curTab, setCurTab] = useState("login");
   const [userContext, setUserContext] = useContext(UserContext);
-  const {t} = useTranslation();
   const { theme } = useContext(ThemeContext);
+  const [LoginRegisterActiveTab, setLoginRegisterActiveTab] = useState("login");
   
   const verifyUser = useCallback(async () => {
     fetch(`${process.env.REACT_APP_API_ENDPOINT}/users/refreshToken`, {
@@ -48,15 +44,8 @@ import  FormContainer  from './components/FormContainer';
     <div className={theme === 'light' ? lightTheme : darkTheme}>
       {userContext.token === null ? (
         <>
-          <Header />
-          <FormContainer>
-          <Card elevation="1">
-            <Tabs id="Tabs" onChange={(newTabId) => setCurTab(newTabId)} selectedTabId={curTab}>
-              <Tab id="login" title={t('signIn')} panel={<Login />} />
-              <Tab id="register" title={t('signUp')} panel={<Register />} />
-            </Tabs>
-          </Card>
-          </FormContainer>
+          <Header setActiveTab={setLoginRegisterActiveTab}/>
+          <LoginRegister activeTab={LoginRegisterActiveTab} setActiveTab={setLoginRegisterActiveTab}/>
         </>
       ) : userContext.token ? (
         <>

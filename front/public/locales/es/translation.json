@@ -1,11 +1,5 @@
 {
-    "signIn": "Iniciar sesión",
     "signingIn":"Iniciando sesión",
-    "signUp": "Registrarse",
-    "profile": "Perfil",
-    "logout": "Cerrar sesión",
     "email": "Correo electrónico",
-    "password": "Contraseña",
-    "lighttheme": "Tema claro",
-    "darktheme": "Tema oscuro"
-  }
+    "password": "Contraseña"
+}

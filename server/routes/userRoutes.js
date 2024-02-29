@@ -33,6 +33,10 @@ router.get("/me", verifyUser, (req, res, next) => {
 // @access  Private
 router.get('/logout', verifyUser, userController.logout);
 
+router.get('/enable-mfa', verifyUser, userController.enableMfa);
+router.get('/disable-mfa', verifyUser, userController.disableMfa);
+router.post('/verify-totp', verifyUser,userController.verifyTOTP);
+
 
 
 module.exports = router;

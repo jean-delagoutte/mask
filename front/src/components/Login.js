@@ -1,15 +1,17 @@
 import React, {useState, useContext} from "react";
 import { Button, Callout, FormGroup, InputGroup } from "@blueprintjs/core"
-import { UserContext } from "./context/UserContext";
+import { UserContext } from "../context/UserContext";
 import { useTranslation } from 'react-i18next';
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [otp, setOtp] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);    
     const [error, setError] = useState("");
-    const [userContext, setUserContext] = useContext(UserContext);
-    const {t} = useTranslation();
+    const [otpRequired, setOtpRequired] = useState(false);
+    const [, setUserContext] = useContext(UserContext);
+    const {t} = useTranslation('loginregister');
 
     const formSubmitHandler  = async (e) => {
         e.preventDefault();
@@ -22,7 +24,7 @@ const Login = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({username: email, password})
+            body: JSON.stringify({username: email, password, totp: otpRequired ? otp : undefined})
         }).then(async (res) => {
             setIsSubmitting(false);
             if (!res.ok) {
@@ -43,9 +45,13 @@ const Login = () => {
             else 
             {
                 const data = await res.json()
-                setUserContext(oldValues => {
-                  return { ...oldValues, token: data.token }
-                })
+                if (data.otpRequired) {
+                    setOtpRequired(true);
+                } else {
+                    setUserContext(oldValues => {
+                      return { ...oldValues, token: data.token };
+                    });
+                }
             }
         }).catch((err) => {
             setError(genericErrorMsg);
@@ -63,6 +69,20 @@ const Login = () => {
             <FormGroup label={t('password')} labelFor="password">
                 <InputGroup id="password" type="password" placeholder={t('password')} value={password} onChange={(e) => setPassword(e.target.value)} />
             </FormGroup>
+            {otpRequired && (
+            <FormGroup
+                label={t('totp')}
+                labelFor="totp-input"
+            >
+                <InputGroup
+                id="totp-input"
+                type="text"
+                placeholder={t('totp')}
+                value={otp}
+                onChange={e => setOtp(e.target.value)}
+                />
+            </FormGroup>
+            )}
             <Button 
                 intent="primary"
                 disabled={isSubmitting} 

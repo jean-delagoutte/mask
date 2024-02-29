@@ -1,0 +1,12 @@
+{
+    "signIn": "Iniciar sesión",
+    "signingIn":"Iniciando sesión",
+    "signUp": "Regístrate",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "totp": "Código de verificación",
+    "register": "Registrarse",
+    "registring": "Registrando",
+    "firstName": "Nombre",
+    "lastName": "Apellido"
+}

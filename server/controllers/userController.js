@@ -2,6 +2,8 @@ const User = require('../models/user');
 const {getToken, COOKIE_OPTIONS, getRefreshToken} = require('../authentificate');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const speakeasy = require('speakeasy');
+const QRCode = require('qrcode');
 
 const signup = async (req, res) => {
     if (!req.body.firstName){
@@ -116,12 +118,26 @@ const logout = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    console.log('login');
-    const token = getToken({_id: req.user._id});
-    const refreshToken = getRefreshToken({_id: req.user._id});
     try{
         const user = await User.findById(req.user._id);
         if (user){
+            if (user.twoFactorEnabled) {
+                if (!req.body.totp) {
+                    return res.send({otpRequired: true});
+                }
+                else {
+                    const isValidTOTP = speakeasy.totp.verify({
+                        secret: user.twoFactorSecret,
+                        encoding: 'base32',
+                        token: req.body.totp
+                    });
+                    if (!isValidTOTP) {
+                        return res.status(400).send('Invalid TOTP code');
+                    }
+                }
+            }
+            const token = getToken({_id: req.user._id});
+            const refreshToken = getRefreshToken({_id: req.user._id});
             user.refreshToken.push({refreshToken});
             try{
                 const userSend = user.save();
@@ -144,4 +160,81 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = {signup, refreshToken, logout, login};
+const enableMfa = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const secret = speakeasy.generateSecret();
+        const otpauthURL = speakeasy.otpauthURL({
+            secret: secret.base32,
+            label: 'Mern_Auth_SK',
+            encoding: 'base32'
+        });
+        const qrCode = await QRCode.toDataURL(otpauthURL);
+
+        user.twoFactorSecret = secret.base32;
+        await user.save();
+
+        res.send({otpauthURL, qrCode});
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+};
+
+const disableMfa = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        user.twoFactorEnabled = false;
+        const token = getToken({_id: user._id});
+        const refreshToken = getRefreshToken({_id: user._id});
+        user.refreshToken.push({refreshToken});
+        await user.save();
+        res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
+        res.send({success: true, token});
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+};
+
+const verifyTOTP = async (req, res) => {
+    try {
+      const user = await User.findOne(req.user._id);
+      if (!user) {
+        return res.status(400).send('Invalid username or password');
+      }
+  
+      const isValidTOTP = speakeasy.totp.verify({
+        secret: user.twoFactorSecret,
+        encoding: 'base32',
+        token: req.body.totp
+      });
+  
+      if (!isValidTOTP) {
+        return res.status(400).send('Invalid TOTP code');
+      }
+  
+      const token = getToken({_id: user._id});
+      const refreshToken = getRefreshToken({_id: user._id});
+      user.refreshToken.push({refreshToken});
+      user.twoFactorEnabled = true;
+      await user.save();
+      res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
+      res.send({success: true, token});
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+    }
+  };
+  
+
+
+
+module.exports = {signup, refreshToken, logout, login, enableMfa, disableMfa, verifyTOTP};

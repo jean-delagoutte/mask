@@ -1,12 +1,6 @@
 {
-    "signIn": "Se connecter",
     "signingIn":"Connectez-vous",
-    "signUp": "S'inscrire",
-    "profile": "Profil",
-    "logout": "Déconnexion",
     "email": "Email",
-    "password": "Mot de passe",
-    "lighttheme": "Thème clair",
-    "darktheme": "Thème sombre"
-  }
+    "password": "Mot de passe"
+}
   

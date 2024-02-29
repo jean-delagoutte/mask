@@ -1,0 +1,9 @@
+{
+    "title": "Authentification Multi-Facteur",
+    "description": "L'authentification multi-facteur (MFA) ajoute une couche de sécurité à votre compte en exigeant une deuxième forme de vérification",
+    "enabletext": "L'authentification multi-facteur est active sur votre compte",
+    "disabletext": "L'authentification multi-facteur est désactivée sur votre compte",
+    "enable": "Activer l'authentification multi-facteur",
+    "disable": "Désactiver l'authentification multi-facteur"
+}
+

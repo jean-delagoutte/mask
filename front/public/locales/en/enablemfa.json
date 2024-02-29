@@ -1,0 +1,8 @@
+{
+    "title": "Multi-Factor Authentication",
+    "description": "Multi-factor authentication (MFA) adds an extra layer of security to your account by requiring a second form of verification",
+    "enabletext": "Multi-factor authentication is enabled on your account",
+    "disabletext": "Multi-factor authentication is disabled on your account",
+    "enable": "Enable Multi-Factor Authentication",
+    "disable": "Disable Multi-Factor Authentication"
+}
