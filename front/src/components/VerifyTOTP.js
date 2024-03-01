@@ -23,8 +23,13 @@ const VerifyTOTP = ({ setShowVerifyTOTP, setUserContext }) => {
       }
 
       const data = await response.json();
-      setUserContext(prevState => ({ ...prevState, mfaEnabled: true }));
-      setShowVerifyTOTP(false);
+      if (data.success){
+        setShowVerifyTOTP(false);
+        setUserContext(oldValues => {
+          return { ...oldValues, details: { ...oldValues.details, twoFactorEnabled: true } }});
+      }else{
+        setError('Invalid TOTP code. Please try again.');
+      }
     } catch (error) {
       setError(error.message);
     }

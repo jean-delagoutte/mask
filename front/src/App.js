@@ -1,17 +1,19 @@
 import './App.css';
 import React, {useState, useContext, useCallback, useEffect} from 'react';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from './context/UserContext';
-import Welcome from './Welcome';
-import Loader from './Loader';
-import Header from './components/Header';
 import { ThemeContext, lightTheme, darkTheme  } from './context/ThemeContext';
+import Header from './components/Header';
 import LoginRegister from './components/LoginRegister';
+import Profile from './components/Profile';
+import Home from './components/Home';
+import {PrivateRoute, UnAuthRoute} from './routes/PrivateRoute';
 
 
  function App() {
-  const [userContext, setUserContext] = useContext(UserContext);
+  const [,setUserContext] = useContext(UserContext);
   const { theme } = useContext(ThemeContext);
-  const [LoginRegisterActiveTab, setLoginRegisterActiveTab] = useState("login");
+  const [,setActiveTab] = useState('login');
   
   const verifyUser = useCallback(async () => {
     fetch(`${process.env.REACT_APP_API_ENDPOINT}/users/refreshToken`, {
@@ -42,19 +44,15 @@ import LoginRegister from './components/LoginRegister';
 
   return (
     <div className={theme === 'light' ? lightTheme : darkTheme}>
-      {userContext.token === null ? (
-        <>
-          <Header setActiveTab={setLoginRegisterActiveTab}/>
-          <LoginRegister activeTab={LoginRegisterActiveTab} setActiveTab={setLoginRegisterActiveTab}/>
-        </>
-      ) : userContext.token ? (
-        <>
-          <Header />
-          <Welcome />
-        </>
-      ) : (
-        <Loader />
-      )}
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<UnAuthRoute><LoginRegister activeTab={'login'} onTabChange={setActiveTab}/></UnAuthRoute>} />
+          <Route path="/register" element={<UnAuthRoute><LoginRegister activeTab={'register'} onTabChange={setActiveTab}/></UnAuthRoute>} />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />       
+        </Routes>
+      </Router>
     </div>
   );
   

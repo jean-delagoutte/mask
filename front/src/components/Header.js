@@ -1,5 +1,6 @@
 import { Alignment, Navbar, Menu, MenuItem, Popover, Button, Switch } from '@blueprintjs/core';
 import { useContext, useState, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { UserContext } from "../context/UserContext";
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
@@ -9,7 +10,7 @@ import { ThemeContext } from '../context/ThemeContext';
 
 
 
-const Header = ({setActiveTab}) => {
+const Header = () => {
   const [userContext, setUserContext] = useContext(UserContext);
   const [langage, setLangage] = useState('fr');
   const {t} = useTranslation('header');
@@ -20,6 +21,7 @@ const Header = ({setActiveTab}) => {
     console.log('new langage : '+newlangage);
     i18n.changeLanguage(newlangage);
   };
+
   
   const getLangageCountryCode = (lang) => {
     switch(lang){
@@ -85,7 +87,7 @@ const Header = ({setActiveTab}) => {
       }
     }
 
-  }, [userContext.details, fetchUserDetails]);
+  }, [userContext.token, userContext.details, fetchUserDetails]);
   
 
   return (
@@ -107,7 +109,9 @@ const Header = ({setActiveTab}) => {
                 <>
                 <Popover content={
                     <Menu>
-                        <MenuItem icon="user"  text={t('profile')} />
+                        <Link to="/profile" >
+                          <MenuItem icon="user"  text={t('profile')} />
+                        </Link>
                         <MenuItem icon="log-out"  text={t('logout')} onClick={logoutHandler} />
                     </Menu>} placement='bottom'>
                     <Button icon='user' text={userContext.details?.username} />
@@ -115,8 +119,12 @@ const Header = ({setActiveTab}) => {
                 </>
               ) : (
                 <>
-                    <Button className="bp5-minimal" icon="log-in"  text={t('signIn')}  onClick={() => setActiveTab('login')}/>
-                    <Button className="bp5-minimal"icon="new-person"  text={t('signUp')} onClick={() => setActiveTab('register')}/>
+                <Link to="/login" >
+                    <Button className="bp5-minimal" icon="log-in"  text={t('signIn')}  />
+                </Link>
+                <Link to="/register" >
+                    <Button className="bp5-minimal"icon="new-person"  text={t('signUp')} />
+                </Link>
                 </>
               )}
               <Popover content={

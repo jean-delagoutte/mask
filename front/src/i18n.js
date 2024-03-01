@@ -22,6 +22,9 @@ i18n
     },
     nsSeparator: false,
     defaultNS: 'translation',
+    react: {
+      useSuspense: false,
+    },
 });
 
 export default i18n;
