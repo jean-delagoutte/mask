@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useState, useContext, useCallback, useEffect} from 'react';
+import React, {useState, useContext, useCallback, useEffect, useRef} from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from './context/UserContext';
 import { ThemeContext, lightTheme, darkTheme  } from './context/ThemeContext';
@@ -14,6 +14,7 @@ import {PrivateRoute, UnAuthRoute} from './routes/PrivateRoute';
   const [,setUserContext] = useContext(UserContext);
   const { theme } = useContext(ThemeContext);
   const [,setActiveTab] = useState('login');
+  const effectExecuted = useRef(false);
   
   const verifyUser = useCallback(async () => {
     fetch(`${process.env.REACT_APP_API_ENDPOINT}/users/refreshToken`, {
@@ -38,8 +39,13 @@ import {PrivateRoute, UnAuthRoute} from './routes/PrivateRoute';
   }, [setUserContext]);
 
   useEffect(() => {
+    if (effectExecuted.current) return;
     verifyUser();
   }, [verifyUser]);
+
+  useEffect(() => {
+    effectExecuted.current = true;
+  }, []);
 
 
   return (
