@@ -51,7 +51,15 @@ C'est un projet avec le stack MERN (Mongodb Epress React Node), il vous faut don
 
 ## Explication des implémetations
 - [X] login + mot de passe avec token  et refreshToken Jwt
-A développer
+flux pour l'identification
+```mermaid
+flowchart TD
+    A[Front\nRequête d'identification] -->|/login| B(Back\nAuthentification avec  Passport)
+    B --> C(Back\nGeneration JWT & RerefreshToken)
+    C --> |Sauvegarde Refresh Token|D(Back\nDatabase)
+    C --> |"set-Cookie : refreshToken\nResponse body :{jwt_token}"|E[Front\nSauvegarde de JWT en mémoire] 
+    E --> F[Front\nDémarrage du compte à rebours pour le refresh silencieux]
+```
 
 
 
