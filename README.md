@@ -1,18 +1,19 @@
 # MASK (MERN Auth StarterKit)
 Ceci est un projet starterkit basé sur le stack MERN.
 
-Le point de départ de ce projet a été mon souhait de travailler sur un "vrai" projet React afin d'aller plus loin que les simples tutos et formations que j'ai pu suivre. Ce projet se veut être le point de départ de futures applications.
+L'initiation de ce projet est née du désir de travailler sur un projet React concret, afin d'approfondir mes connaissances au-delà des simples tutoriels et formations suivis. 
 
-Vous trouverez donc proprobablement dans ce projet des defauts d'implémentaion, des Best practices non respectés (car non connu), un manque évident de commentaires (surtout au début du projet), une organisatino un peu brouillone...
-N'hésitez pas à me signaler votre point de vue sur ce sujets, et  je me ferais un plaisir de me corriger si je juges vos arguments convainquant.
+Ce projet a pour objectif de fournir une base solide pour les futures applications basées sur le stack MERN. Bien que j'ai fait des efforts pour respecter les meilleures pratiques, il est possible que certaines imperfections subsistent, telles que des défauts d'implémentation, une organisation perfectible ou un manque de commentaires dans le code. Je suis ouvert à toute remarque constructive visant à améliorer la qualité du projet.
 
-Rendons à César ce qui est à Cesar, J'ai initié ce projet en me basant sur un article traitant du sujet des token et refreshToken JWT avec MERN:
+N'hésitez pas à me faire part de votre point de vue sur ces sujets, et je prendrai en compte vos arguments pour apporter les corrections nécessaires.
+
+Rendons à César ce qui est à Cesar, J'ai initié ce projet en me basant sur un article traitant du sujet des jetons et jetons de réinitialisation JWT avec MERN. Je vous invite à consulter cet article pour en savoir plus sur les concepts abordés dans ce projet :
 
 https://www.codingdeft.com/posts/react-authentication-mern-node-passport-express-mongo/#why-both-jwt-and-refresh-tokens-and-what-is-silent-refresh
 
 
 ## Objectif du projet
-L'objectif du projet est d'implémenté un maximum de technique d'authentification comme :
+L'objectif du projet est d'implémenter un maximum de technique d'authentification comme :
 
 - [X] login + mot de passe avec token  et refreshToken Jwt 
 - [X] Mfa via jeton TOTP
@@ -27,17 +28,18 @@ L'objectif du projet est d'implémenté un maximum de technique d'authentificati
 - [ ] Detection des "anomalies"  (connexion depuis un eutre appareil, depuis un autre pays)
 - [ ] ......
 
-Dans le futur, j'aimerais implémenter d'autres features plus éloignés de l'authentification mais dont je vois un intéret pour un projet de ce type :
+À l'avenir, j'envisage d'ajouter des fonctionnalités supplémentaires qui ne sont pas directement liées à l'authentification, mais qui pourraient s'avérer utiles pour un projet de ce type. Parmi ces fonctionnalités, on peut citer :
 - [x] Internationalisation de l'app
 - [X] Switch Theme sombre light
 - [ ] ajout d'un système de role
-- [ ] ajout d'un systeme de groupe (groupe d'utilisateur, groupe de groupe...) pour egrouper des utlisateurs sous une même entité par exemple
+- [ ] ajout d'un systeme de groupe pour regrouper des utilisateurs, avec des fonctionnalités telles que la création de groupes et de sous-groupes, la gestion des autorisations, etc
 - [ ] un backoffice pour gérer les users, les groupes, dashboard
 
 
 
-Dans un premier temps, je vais essayer d'implémenter ces features.
-Dans un dexuième temps, je rendrais le projet modulaire au travers d'un fichier de config afin de choisir ce que l'on veut activer ou pas comme feature.
+Dans un premier temps, je prévois d'implémenter ces features.
+
+Dans un dexuième temps, je ptévois de rendre le projet modulaire au travers d'un fichier de configuration. Cela permettra aux utilisateurs de choisir les fonctionnalités qu'ils souhaitent activer ou désactiver.
 
 
 
@@ -59,6 +61,8 @@ flowchart TD
     C --> |Sauvegarde Refresh Token|D(Back\nDatabase)
     C --> |"set-Cookie : refreshToken\nResponse body :{jwt_token}"|E[Front\nSauvegarde de JWT en mémoire] 
     E --> F[Front\nDémarrage du compte à rebours pour le refresh silencieux]
+    F --> G{Front\nRequete de refresh}
+    G --> |/refreshtoken|B
 ```
 
 
@@ -72,16 +76,16 @@ VS code + Plugin VS code :
 *   MongoDB for VS Code
 *   SonarLint
 
-Librairie utlisé :
-* PassportJS (authentification)
-* BluePrint (UI)
-* i18n (Intertionalisation)
-* Liste à compléter
+Librairies utlisées :
+* [React](https://fr.legacy.reactjs.org/)
+* [PassportJS](https://www.passportjs.org/) (authentification)
+* [BluePrintJs](https://blueprintjs.com/) (UI)
+* [i18next](https://www.i18next.com/) (Intertionalisation)
 * ...
 
 IA :
 * Github Copilot
-* [chat](https://chat.mistral.ai)
+* [chat mistral](https://chat.mistral.ai)
 
 
 
